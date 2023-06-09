@@ -44,23 +44,23 @@ module developerImage 'modules/main.bicep' = {
   }
 }
 
-// module dataScienceImage 'modules/main.bicep' = {
-//   name: 'datascience-custom-image'
-//   params: {
-//     prefix: prefix
-//     imageName: 'dataScience'
-//     location: location
-//     imagePublisher: imagePublisher
-//     tags: tags
-//     customize: [
-//       {
-//         type: 'PowerShell'
-//         name: 'Install Choco and Vscode'
-//         inline: [
-//           'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))"'
-//           'choco install -y vscode'
-//         ]
-//       }
-//     ]
-//   }
-// }
+module dataScienceImage 'modules/main.bicep' = {
+  name: 'datascience-custom-image'
+  params: {
+    prefix: prefix
+    imageName: 'dataScience'
+    location: location
+    imagePublisher: imagePublisher
+    tags: tags
+    customize: [
+      {
+        type: 'PowerShell'
+        name: 'Install Choco and Vscode'
+        inline: [
+          'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))"'
+          'choco install -y vscode'
+        ]
+      }
+    ]
+  }
+}

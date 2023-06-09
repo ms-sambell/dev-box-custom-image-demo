@@ -12,6 +12,7 @@ This repository creates a Azure Image Builder template which can then be used to
 - Connect to your Azure tenant using `az login`
 - Connect to the appropriate subscription `az account set --subscription $subscriptionID`
 - An existing Resource Group
+- Ensure that the correct resource providers are enabled on the subscription [resource provider docs](https://learn.microsoft.com/en-us/azure/dev-box/how-to-customize-devbox-azure-image-builder#create-a-windows-image-and-distribute-it-to-azure-compute-gallery)
 
 ## Instructions
 
