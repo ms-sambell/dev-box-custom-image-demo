@@ -121,3 +121,30 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
   }
   tags: tags
 }
+
+var pwshBuildCommand = 'Invoke-AzResourceAction -ResourceName "${uniqueName}" -ResourceGroupName "${resourceGroup().name}" -ResourceType "Microsoft.VirtualMachineImages/imageTemplates" -ApiVersion "2020-02-14" -Action Run -Force'
+
+@description('This resource invokes a command to start the AIB build')
+resource imageTemplate_build 'Microsoft.Resources/deploymentScripts@2020-10-01' =  {
+  name: uniqueName
+  location: location
+  kind: 'AzurePowerShell'
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${aibIdentity.id}': {}
+    }
+  }
+  dependsOn: [
+    imageTemplate
+    roleAssignment
+  ]
+  properties: {
+    forceUpdateTag: guid
+    azPowerShellVersion: '6.2'
+    scriptContent: pwshBuildCommand
+    timeout: 'PT1H'
+    cleanupPreference: 'OnSuccess'
+    retentionInterval: 'P1D'
+  }
+}
