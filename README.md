@@ -14,10 +14,9 @@ This repository creates a Azure Image Builder template which can then be used to
 ## Instructions
 
 1. Clone this repository and update the `deploy.bicep` file variables.
-1. Run the following command to deploy the resources: `az deployment group create --name devboxtest --resource-group $yourResourceGroup --template-file deploy.bicep`.
-1. Once the deployment is complete, open the resource group and find the `Image Template` and click `build`. **Note:** The build process is slow and can take 30minutes.
-1. Once the `Image Template` has built successfully, create a `version` of the image.
-1. Go into DevBox and add the definition.
+1. Run the following command to deploy the resources: `az deployment group create --name devboxtest --resource-group $yourResourceGroup --template-file deploy.bicep`. <br> **Note:** The Image build process is slow and can take 30minutes.
+1. Add the compute gallery to your DevBox instance.
+1. Then add the new image to a dev box definition. <br> **Note:** The validation process can take 15minutes.
 1. Test the new custom image.
 
 ## Custom Image Changes
