@@ -5,6 +5,7 @@
 This repository creates a Azure Image Builder template which can then be used to `build` a image. This image can then be added to dev definition in the DevBox portal and used to provision VMs.
 
 ![image](.img/devbox-flow.png)
+
 ## Requirements
 
 - Install the AZ CLI tool
