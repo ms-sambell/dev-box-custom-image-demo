@@ -18,20 +18,23 @@ param tags object = {
   'Demo-Name': 'DevBoxCustomImage'
 }
 
+@description('Comapny these images will be used for.')
+param company string = ''
+
 @description('Tasks to install on the vm')
 param customize array
 param guid string = newGuid()
-var uniqueName = take('${prefix}_${imageName}-_${guid}_Template',64)
+var uniqueName = take('${prefix}_${imageName}_${guid}',64)
 
 // Todo: make params
 var imageOffer = prefix
 var imageSku = '1-0-0'
 var imageBuilderSku = 'Standard_D8ds_v4'
 var imageBuilderDiskSize = 256
-var runOutputName = 'devBoxCustImg01'
+var runOutputName = '${imageName}_output'
 
 resource aibIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
-  name: take('${prefix}_${imageName}',64)
+  name: take('${prefix}_${company}',64)
   location: location
   tags: tags
 }
@@ -53,7 +56,7 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-prev
 }
 
 resource computeGallery 'Microsoft.Compute/galleries@2022-03-03' = {
-  name: take('${prefix}_${imageName}',64)
+  name: take('${prefix}_${company}',64)
   location: location
   properties: {}
   tags: tags
@@ -76,6 +79,7 @@ resource image 'images@2022-03-03' = {
     osState: 'Generalized'
     osType: 'Windows'
     hyperVGeneration: 'V2'
+    architecture: 'x64'
   }
   tags: tags
 }
@@ -92,7 +96,6 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
     }
     source: {
       type: 'PlatformImage'
-      // Todo: Make this var/param
       publisher: 'MicrosoftWindowsDesktop'
       offer: 'Windows-11'
       sku: 'win11-21h2-avd'
@@ -126,7 +129,7 @@ var pwshBuildCommand = 'Invoke-AzResourceAction -ResourceName "${uniqueName}" -R
 
 @description('This resource invokes a command to start the AIB build')
 resource imageTemplate_build 'Microsoft.Resources/deploymentScripts@2020-10-01' =  {
-  name: uniqueName
+  name: '${uniqueName}-build-trigger'
   location: location
   kind: 'AzurePowerShell'
   identity: {

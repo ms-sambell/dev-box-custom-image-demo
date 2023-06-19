@@ -2,9 +2,9 @@
 
 ## Overview
 
-This repository creates a Azure Image Builder template which can then be used to `build` a image. This image can then be added to dev definition in the DevBox portal and used to provision VMs.
+This repository creates a Azure Image Builder template which will automatically trigger an Image build. This image can then be added to dev definition and used by DevBox to provision workstations. The image produced can then be used by Dev Box.
 
-![image](.img/devbox-flow.png)
+![architecture](.img/dev-box-architecture.png)
 
 ## Requirements
 
@@ -14,16 +14,48 @@ This repository creates a Azure Image Builder template which can then be used to
 - An existing Resource Group
 - Ensure that the correct resource providers are enabled on the subscription [resource provider docs](https://learn.microsoft.com/en-us/azure/dev-box/how-to-customize-devbox-azure-image-builder#create-a-windows-image-and-distribute-it-to-azure-compute-gallery)
 
-## Instructions
+## What's Included
 
-1. Clone this repository and update the `deploy.bicep` file variables.
-1. Run the following command to deploy the resources: `az deployment group create --name devboxtest --resource-group $yourResourceGroup --template-file deploy.bicep`. <br> **Note:** The Image build process is slow and can take 30minutes.
-1. Add the compute gallery to your DevBox instance.
-1. Then add the new image to a dev box definition. <br> **Note:** The validation process can take 15minutes.
-1. Test the new custom image.
+The code in this repository will create the following resources in Azure:
+
+- **Azure Compute Gallery:** A gallery for Virtual Machine images to be stored and distributed for consumption.
+- **VM Image Definition:** The Image definitions that are versioned and publish to the Compute Gallery.
+- **Image Template:** Azure Image Builder template to create a Virtual Machine image which can be consumed by DevBox.
+- **Deployment Scrip:** Triggers the 'build' process a new image based on the Image Template.
+- **Managed Identity:** This will be used by the VM Image definition to spin-up a VM and snapshot the image after the scripts are installed.
 
 ## Custom Image Changes
 
-To make changes / add to the custom image, you can open the `deploy.bicep` file and add any install commands to the `Customize` parameter. There's already an existing example in the file.
+The scripts that Azure Image Builder will use to build the image template for DevBox are in the `installScripts` directory. The reason the scripts are split out of the Bicep module is to:
 
-You can also copy the existing developer template (which is an example) and create different image profiles.
+- Simplify developing, testing and improve readability.
+- Allow linting on scripts and encourage the use of advanced Powershell.
+- Reduces the error-rate of needing to write PowerShell within a Bicep module.
+- Enables reusing and sharing scripts.
+
+### Scripts
+
+- **common.ps1:** Used for any mandatory or shared tooling that should be installed on any DevBox image. This saves needing to store and write the same install commands for different images. As well as providing an area for operation teams to define proxy or TLS inspection certificates.
+- **developers.ps1:** An example of how to setup a install script for a specific persona. This script is passed through to the `deploy.bicep` script and used in the `developerImage` module.
+
+To create a new profile, simply copy the existing `developerImage` module and update the appropriate fields.
+
+## Installation Instructions
+
+1. Create a resource group in Azure to store the custom image resources in.
+1. Clone this repository and update the `deploy.bicep` file variables.
+1. (Optional) - Update the PowerShell scripts in the `installScripts` directory.
+1. Run the following command to deploy the resources: `az deployment group create --name devboxtest --resource-group $yourResourceGroup --template-file deploy.bicep`. <br> **Note:** The Image build process is slow and can take 30 minutes.
+1. Assign the DevCenter instance access to the Resource Group used in the above steps.
+1. Add the compute gallery to your DevBox instance.
+1. Then add the new image to a dev box definition. <br> **Note:** The validation process can take 15 minutes.
+1. Test the new custom image.
+
+### Troubleshooting
+
+To troubleshoot the Custom Image creation and installation of the scripts, follow the [troubleshooting guide](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/image-builder-troubleshoot).
+
+## Documentation
+
+- [What is Microsoft Dev Box?](https://learn.microsoft.com/en-us/azure/dev-box/overview-what-is-microsoft-dev-box)
+- [DevBox QuickStart](https://github.com/luxu-ms/Devbox-ADE-Infra/tree/main)
