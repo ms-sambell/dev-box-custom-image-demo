@@ -4,7 +4,7 @@
 
 This repository creates a Azure Image Builder template which will automatically trigger an Image build. This image can then be added to dev definition and used by DevBox to provision workstations. The image produced can then be used by Dev Box.
 
-![architecture](.img/dev-box-architecture.png)
+![architecture](.img/dev-box-arch.png)
 
 ## Requirements
 
@@ -21,7 +21,7 @@ The code in this repository will create the following resources in Azure:
 - **Azure Compute Gallery:** A gallery for Virtual Machine images to be stored and distributed for consumption.
 - **VM Image Definition:** The Image definitions that are versioned and publish to the Compute Gallery.
 - **Image Template:** Azure Image Builder template to create a Virtual Machine image which can be consumed by DevBox.
-- **Deployment Scrip:** Triggers the 'build' process a new image based on the Image Template.
+- **Deployment Script:** Triggers the 'build' process a new image based on the Image Template.
 - **Managed Identity:** This will be used by the VM Image definition to spin-up a VM and snapshot the image after the scripts are installed.
 
 ## Custom Image Changes
@@ -54,6 +54,8 @@ To create a new profile, simply copy the existing `developerImage` module and up
 ### Troubleshooting
 
 To troubleshoot the Custom Image creation and installation of the scripts, follow the [troubleshooting guide](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/image-builder-troubleshoot).
+
+The code in the developer.ps1 file writes the chocolatey log file to the console so it can be picked up in the above troubleshooting guide.
 
 ## Documentation
 
