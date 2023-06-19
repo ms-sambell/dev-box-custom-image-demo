@@ -9,7 +9,7 @@ $tools = @(
 ## Install Tools using Chocolatey from the list above
 foreach ($tool in $tools) {
     choco install -y $tool
-    Write-Host "Installed the tool: ${$tool}"
+    Write-Host "Installed the tool: $tool"
 }
 
 ## Chocolatey Logs

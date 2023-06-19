@@ -9,7 +9,7 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocola
 ## Tooling List
 $tools = @(
             "vscode", "7zip", "adobereader", "azcopy10", "azure-cli", 
-            "flux", "gh", "git", "github-desktop", "pwsh"
+            "flux", "gh", "git", "github-desktop", 'pwsh'
         )
 
 ## Install Tools using Chocolatey from the list above

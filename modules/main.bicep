@@ -18,8 +18,6 @@ param tags object = {
   'Demo-Name': 'DevBoxCustomImage'
 }
 
-@description('Comapny these images will be used for.')
-param company string = ''
 
 @description('Tasks to install on the vm')
 param customize array
@@ -34,7 +32,7 @@ var imageBuilderDiskSize = 256
 var runOutputName = '${imageName}_output'
 
 resource aibIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
-  name: take('${prefix}_${company}',64)
+  name: take('${prefix}_${imagePublisher}',64)
   location: location
   tags: tags
 }
@@ -56,7 +54,7 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-prev
 }
 
 resource computeGallery 'Microsoft.Compute/galleries@2022-03-03' = {
-  name: take('${prefix}_${company}',64)
+  name: take('${prefix}_${imagePublisher}',64)
   location: location
   properties: {}
   tags: tags
@@ -79,7 +77,6 @@ resource image 'images@2022-03-03' = {
     osState: 'Generalized'
     osType: 'Windows'
     hyperVGeneration: 'V2'
-    architecture: 'x64'
   }
   tags: tags
 }

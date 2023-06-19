@@ -1,7 +1,6 @@
 var location = 'australiaeast'
 var tags = {}
-var imagePublisher = 'valeriia'
-var company = 'contoso'
+var imagePublisher = 'contoso'
 var prefix = 'devbox'
 
 // Scripts
@@ -15,7 +14,6 @@ module developerImage 'modules/main.bicep' = {
     imageName: 'developers'
     location: location
     imagePublisher: imagePublisher
-    company: company
     tags: tags
     customize: [
       {
